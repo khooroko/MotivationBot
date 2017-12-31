@@ -34,10 +34,13 @@ class MotiBot:
         if reply_markup:
             url += "&reply_markup={}".format(reply_markup)
         self.get_url(url)
+        self.db.print_tables()
 
     def handle_updates(self, updates):
         for update in updates["result"]:
             chat = update["message"]["chat"]["id"]
+            if chat not in self.db.get_users():
+                self.db.add_user(chat)
             try:
                 text = update["message"]["text"]
             except KeyError:
@@ -50,7 +53,7 @@ class MotiBot:
             elif text == "/start":
                 self.send_message(Messages.start, chat)
             elif text == AdminCommands.list:
-                quotes = self.db.get_quotes(chat)  ##
+                quotes = self.db.get_quotes()  ##
                 message = "\n".join(quotes)
                 if message.__len__() > 0:
                     self.send_message(message, chat)
@@ -61,25 +64,34 @@ class MotiBot:
                 self.send_message(Messages.cleared, chat)
             elif text.startswith(AdminCommands.delete):
                 quote_id_to_delete = int(text[AdminCommands.delete_offset]) - 1
-                quotes = self.db.get_quotes(chat)  ##
-                quote_to_delete = quotes[quote_id_to_delete]
-                self.send_message(Messages.deleted_by_id.format(quote_to_delete), chat)
-                self.db.delete_quote(quote_to_delete)
+                if quote_id_to_delete > 0:
+                    quotes = self.db.get_quotes()  ##
+                    try:
+                        quote_to_delete = quotes[quote_id_to_delete]
+                        self.send_message(Messages.deleted_by_id.format(quote_to_delete), chat)
+                        self.db.delete_quote(quote_to_delete)
+                    except IndexError:
+                        self.send_message(Messages.invalid_id, chat)
+                else:
+                    self.send_message(Messages.invalid_id, chat)
             elif text.startswith("/add"):
                 new_text = text[5:]
+                quotes = self.db.get_quotes()  ##
                 if str.lower(new_text).strip() in (quote.lower().strip() for quote in quotes):
                     self.send_message(Messages.duplicate, chat)
+                elif str.__len__(new_text) < 5:
+                    self.send_message(Messages.no, chat)
                 else:
-                    self.db.add_quote(new_text, chat)  ##
+                    self.db.add_quote(new_text)  ##
                     self.send_message(Messages.added, chat)
             elif text.startswith("/"):
                 self.send_message(Messages.no, chat)
             else:
                 self.last_quote = "\n".join(self.db.get_random_quote())
-                if self.last_quote.__len__() > 0:
+                if not self.last_quote == "":
                     self.send_message(self.last_quote, chat)
                 else:
-                    self.send_message(Messages.empty)
+                    self.send_message(Messages.empty, chat)
 
     @staticmethod
     def get_url(url):

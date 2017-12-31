@@ -1,4 +1,5 @@
 import sqlite3
+import pandas as pd
 
 
 class DBHelper:
@@ -8,17 +9,19 @@ class DBHelper:
         self.conn = sqlite3.connect(dbname, isolation_level=None)
 
     def setup(self):
-        tblstmt = "CREATE TABLE IF NOT EXISTS quotes (description text, owner text)"
+        tblstmt = "CREATE TABLE IF NOT EXISTS quotes (description text)"
         quoteidx = "CREATE INDEX IF NOT EXISTS quoteIndex ON quotes (description ASC)"
-        ownidx = "CREATE INDEX IF NOT EXISTS ownIndex ON quotes (owner ASC)"
         self.conn.execute(tblstmt)
         self.conn.execute(quoteidx)
-        self.conn.execute(ownidx)
+        tblstmt2 = "CREATE TABLE IF NOT EXISTS owners (owner text, quote text, time text)"
+        owneridx = "CREATE UNIQUE INDEX IF NOT EXISTS ownerIndex on owners (owner ASC)"
+        self.conn.execute(tblstmt2)
+        self.conn.execute(owneridx)
         self.conn.commit()
 
-    def add_quote(self, quote_text, owner):
-        stmt = "INSERT INTO quotes (description, owner) VALUES (?, ?)"
-        args = (quote_text, owner)
+    def add_quote(self, quote_text):
+        stmt = "INSERT INTO quotes (description) VALUES (?)"
+        args = (quote_text,)
         self.conn.execute(stmt, args)
         self.conn.commit()
 
@@ -28,10 +31,9 @@ class DBHelper:
         self.conn.execute(stmt, args)
         self.conn.commit()
 
-    def get_quotes(self, owner):
-        stmt = "SELECT description FROM quotes WHERE owner = (?)"
-        args = (owner,)
-        return [x[0] for x in self.conn.execute(stmt, args)]
+    def get_quotes(self):
+        stmt = "SELECT description FROM quotes"
+        return [x[0] for x in self.conn.execute(stmt)]
 
     def get_random_quote(self):
         stmt = "SELECT description FROM quotes ORDER BY RANDOM() LIMIT 1"
@@ -39,3 +41,39 @@ class DBHelper:
 
     def clear_all(self):
         self.conn.execute("DELETE FROM quotes")
+
+    def add_user(self, owner):
+        stmt = "INSERT INTO owners (owner) VALUES (?)"
+        args = (owner,)
+        try:
+            self.conn.execute(stmt, args)
+        except sqlite3.IntegrityError:
+            return
+        self.conn.commit()
+
+    def get_users(self):
+        stmt = "SELECT owner FROM owners"
+        return [x[0] for x in self.conn.execute(stmt)]
+
+    def update_last_quote(self, owner, quote_text):
+        stmt = "UPDATE owners SET quote = (?) WHERE owner = (?)"
+        args = (quote_text, owner)
+        self.conn.execute(stmt, args)
+        self.conn.commit()
+
+    def get_time_to_send(self, owner):
+        stmt = "SELECT time FROM owners WHERE owner = (?)"
+        args = (owner,)
+        return [x[0] for x in self.conn.execute(stmt, args)]
+
+    def set_time_to_send(self, owner, time):
+        stmt = "UPDATE owners SET time = (?) WHERE owner = (?)"
+        args = (time, owner)
+        self.conn.execute(stmt, args)
+        self.conn.commit()
+
+    def print_tables(self):
+        print(pd.read_sql_query("SELECT * FROM quotes", self.conn))
+        print()
+        print(pd.read_sql_query("SELECT * FROM owners", self.conn))
+        print()
