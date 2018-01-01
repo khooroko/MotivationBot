@@ -13,7 +13,7 @@ class DBHelper:
         quoteidx = "CREATE INDEX IF NOT EXISTS quoteIndex ON quotes (description ASC)"
         self.conn.execute(tblstmt)
         self.conn.execute(quoteidx)
-        tblstmt2 = "CREATE TABLE IF NOT EXISTS owners (owner text, quote text, time text)"
+        tblstmt2 = "CREATE TABLE IF NOT EXISTS owners (owner text, last_quote text, time text DEFAULT '2100')"
         owneridx = "CREATE UNIQUE INDEX IF NOT EXISTS ownerIndex on owners (owner ASC)"
         self.conn.execute(tblstmt2)
         self.conn.execute(owneridx)
@@ -37,9 +37,9 @@ class DBHelper:
 
     def get_random_quote(self):
         stmt = "SELECT description FROM quotes ORDER BY RANDOM() LIMIT 1"
-        return [x[0] for x in self.conn.execute(stmt)]
+        return self.conn.execute(stmt).fetchone()[0]
 
-    def clear_all(self):
+    def clear_all_quotes(self):
         self.conn.execute("DELETE FROM quotes")
 
     def add_user(self, owner):
@@ -55,8 +55,13 @@ class DBHelper:
         stmt = "SELECT owner FROM owners"
         return [x[0] for x in self.conn.execute(stmt)]
 
+    def get_last_quote(self, owner):
+        stmt = "SELECT last_quote FROM owners WHERE owner = (?)"
+        args = (owner,)
+        return self.conn.execute(stmt, args).fetchone()[0]
+
     def update_last_quote(self, owner, quote_text):
-        stmt = "UPDATE owners SET quote = (?) WHERE owner = (?)"
+        stmt = "UPDATE owners SET last_quote = (?) WHERE owner = (?)"
         args = (quote_text, owner)
         self.conn.execute(stmt, args)
         self.conn.commit()
