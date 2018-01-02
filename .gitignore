@@ -1,5 +1,7 @@
 __pycache__/
 .idea/
 *.sqlite
+
+# ignored for security
 token.json
 admincommands.py
