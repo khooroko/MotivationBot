@@ -54,7 +54,6 @@ class DBHelper:
             self.conn.execute(stmt, args)
         except psycopg2.IntegrityError:  # owner already exists
             return
-        self.conn.commit()
 
     def get_users(self):
         stmt = "SELECT owner FROM owners"

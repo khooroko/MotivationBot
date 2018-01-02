@@ -21,12 +21,15 @@ class Messages:
     no = "Please do not do that."
     deleted_last = "Last quote deleted"
     deleted_before = "This quote has already been deleted"
+    delete_nothing = "Nothing to delete! Try adding a message with \'/add <message>\'"
     deleted_by_id = "'{}' has been removed"
     invalid_id = "The provided index is invalid"
-    invalid_time = "The provided time is invalid. Please enter \'/time\' followed by a time in the 24h format, " \
-                   "For example, \'/time 1200\'."
-    added = "Message successfully added"
-    cleared = "Quotes have been cleared"
+    invalid_time = "The provided time is invalid. Please enter \'/time\' followed by a time in the 24h format. " \
+                   "For example, \'/time 1200\' will set the scheduler to 12pm if you are in Singapore, and 8pm if " \
+                   "you are in California."
+    added = "Message successfully added! If you want to remove the message, please enter \'/delete\' before sending " \
+            "anything else or receiving the daily message"
+    cleared = "All quotes have been cleared"
     empty = "No quotes available"
     time_updated = "Time to send daily message updated"
     time_removed = "Daily messages stopped. To receive daily messages again, send \'/time HHMM\' where HH and MM " \
