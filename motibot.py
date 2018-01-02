@@ -1,4 +1,3 @@
-import datetime
 import json
 import requests
 import schedule
@@ -43,6 +42,9 @@ class MotiBot:
         else:
             self.send_message(Messages.empty, chat)
 
+    def remove_scheduler(self, chat):
+        schedule.clear(chat)
+
     def set_scheduler(self, chat, time_to_send):
         self.db.set_time_to_send(chat, time_to_send)
         schedule.clear(chat)
@@ -81,6 +83,10 @@ class MotiBot:
                 else:
                     self.db.add_quote(new_text)  ##
                     self.send_message(Messages.added, chat)
+
+            elif text == "/time":
+                self.remove_scheduler(chat)
+                self.send_message(Messages.time_removed, chat)
 
             elif text.startswith("/time"):
                 new_time = text[6:]
