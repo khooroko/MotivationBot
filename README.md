@@ -3,10 +3,12 @@ This bot is a community-run bot of motivational quotes, uplifting messages and o
 
 Deployed on Heroku.
 
-Made with much help from this[tutorial](https://www.codementor.io/garethdwyer/tutorials/building-a-telegram-bot-using-python-part-1-goi5fncay), Heroku documentation, Telegram API and StackOverflow.
+![Screenshot](Screenshot.PNG)
 
-## To use
-Add the bot at t.me/DailyMotiBot and send "/start" as prompted.  
+Made with much help from this [tutorial](https://www.codementor.io/garethdwyer/tutorials/building-a-telegram-bot-using-python-part-1-goi5fncay), Heroku documentation, Telegram API and StackOverflow.
+
+## How to use
+Add the bot at t.me/DailyMotiBot and start it as prompted.  
 
 By default, the bot will send you a random message from the database at 9pm (GMT+8) daily.  
 To change the time this happens, send "/time HHMM" where HH and MM are hours and minutes in the 24h format respectively.  
