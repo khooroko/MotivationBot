@@ -1,5 +1,6 @@
 certifi==2017.11.5
 chardet==3.0.4
+Django==2.0.1
 flake8==3.5.0
 idna==2.6
 mccabe==0.6.1
@@ -15,6 +16,7 @@ pytz==2017.3
 requests==2.18.4
 schedule==0.5.0
 six==1.11.0
+tzlocal==1.5.1
 urllib3==1.22
 virtualenv==15.1.0
 virtualenv-clone==0.2.6
