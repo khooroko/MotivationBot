@@ -113,10 +113,6 @@ class MotiBot:
                 else:
                     self.send_message(Messages.invalid_id, chat)
 
-            elif text == AdminCommands.clear:
-                self.db.clear_all_quotes()
-                self.send_message(Messages.cleared, chat)
-
             # Fall-through input
             elif text.startswith("/"):
                 self.send_message(Messages.no, chat)
