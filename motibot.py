@@ -119,7 +119,7 @@ class MotiBot:
 
             elif text.startswith(AdminCommands.delete):
                 try:
-                    quote_id_to_delete = int(text[AdminCommands.delete_offset])
+                    quote_id_to_delete = int(text[AdminCommands.delete_offset:])
                 except ValueError:
                     self.send_message(Messages.invalid_id, chat)
                     return
@@ -140,8 +140,6 @@ class MotiBot:
 
             else:
                 self.send_random_quote(chat)
-
-        self.db.print_tables()  # for debugging when run locally
 
     @staticmethod
     def get_url(url):
