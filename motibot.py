@@ -86,6 +86,8 @@ class MotiBot:
                     self.send_message(Messages.duplicate, chat)
                 elif str(new_text).__len__() < 3:
                     self.send_message(Messages.no, chat)
+                elif str(new_text).__len__() > 255:
+                    self.send_message(Messages.too_long, chat)
                 else:
                     self.db.add_quote(new_text)
                     self.send_message(Messages.added, chat)

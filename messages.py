@@ -19,6 +19,7 @@ class Messages:
            "To disable the daily message, just send \"/time\"."
     duplicate = "That already exists"
     no = "Please do not do that."
+    too_long = "Message too long. Please keep your message to under 255 characters."
     deleted_last = "Last quote deleted"
     deleted_before = "This quote has already been deleted"
     delete_nothing = "Nothing to delete! Try adding a message with \"/add <message>\""
