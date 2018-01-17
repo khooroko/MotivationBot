@@ -10,7 +10,9 @@ Made with much help from this [tutorial](https://www.codementor.io/garethdwyer/t
 ## How to use
 Add the bot at t.me/DailyMotiBot and start it as prompted.  
 
-By default, the bot will send you a random message from the database at 9pm (GMT+8) daily.  
+By default, the bot will send you a random message from the database at 9pm (GMT+8) daily. The daily message may not be sent 
+if the bot has been inactive for half an hour or longer since it is hosted on a free server.
+ 
 To change the time this happens, send "/time HHMM" where HH and MM are hours and minutes in the 24h format respectively.  
 To disable the daily messages, simply send "/time".
 
