@@ -7,7 +7,9 @@ class Messages:
             "To contribute, enter \"/add \" followed by your message. You can add motivational quotes, cheerful " \
             "messages, or even uplifting stories :)\n\n" \
             "Do note that the first message you send may take quite some time to process. Please be patient if this " \
-            "happens as the bot takes some time to wake up. " \
+            "happens as the bot takes some time to wake up.\n\n " \
+            "If the daily message does not appear, it is because this bot is hosted on a free server that makes it " \
+            "sleep after half an hour of inactivity. You can help by talking to the bot every once in awhile!\n" \
             "Enter \"/help\" to see more commands."
     help = "/add <message>: Add your own message in the database.\n" \
            "e.g. \"/add JUST DO IT\"\n\n" \
