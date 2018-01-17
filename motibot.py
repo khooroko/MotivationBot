@@ -84,6 +84,8 @@ class MotiBot:
                 quotes = self.db.get_quotes()
                 if str.lower(new_text).strip() in (quote.lower().strip() for quote in quotes):
                     self.send_message(Messages.duplicate, chat)
+                elif new_text.__contains__("_"):
+                    self.send_message(Messages.underscore, chat)
                 elif str(new_text).__len__() < 3:
                     self.send_message(Messages.no, chat)
                 elif str(new_text).__len__() > 255:

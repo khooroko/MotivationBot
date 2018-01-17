@@ -20,6 +20,7 @@ class Messages:
     duplicate = "That already exists"
     no = "Please do not do that."
     too_long = "Message too long. Please keep your message to under 255 characters."
+    underscore = "Message contains an underscore, please remove it and try again."
     deleted_last = "Last quote deleted"
     deleted_before = "This quote has already been deleted"
     delete_nothing = "Nothing to delete! Try adding a message with \"/add <message>\""
