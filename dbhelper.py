@@ -55,10 +55,10 @@ class DBHelper:
         except psycopg2.IntegrityError:  # owner already exists
             return
 
-    def get_users(self):
-        stmt = "SELECT owner FROM owners"
+    def get_users_and_time(self):
+        stmt = "SELECT owner, time FROM owners"
         self.conn.execute(stmt)
-        return [x[0] for x in self.conn.fetchall()]
+        return [(x[0], x[1]) for x in self.conn.fetchall()]
 
     def get_last_quote(self, owner):
         stmt = "SELECT last_quote FROM owners WHERE owner = CAST ('%s' as text)"

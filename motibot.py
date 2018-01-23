@@ -15,6 +15,7 @@ class MotiBot:
         self.url_prefix = url_prefix
         self.db = DBHelper()
         self.db.setup()
+        self.reset_all_schedulers()
         return
 
     def get_json_from_url(self, url):
@@ -50,6 +51,12 @@ class MotiBot:
         schedule.clear(chat)
         schedule.every().day.at(TimeUtil.convert_string_to_time(time_to_send)).do(self.send_random_quote, chat)\
             .tag(chat)
+
+    def reset_all_schedulers(self):
+        for x in self.db.get_users_and_time():
+            self.remove_scheduler(str(x[0]))
+            schedule.every().day.at(TimeUtil.convert_string_to_time(str(x[1]))).do(self.send_random_quote, str(x[0])) \
+                .tag(str(x[0]))
 
     def handle_updates(self, updates):
         for update in updates["result"]:
@@ -91,7 +98,11 @@ class MotiBot:
                 elif str(new_text).__len__() > 255:
                     self.send_message(Messages.too_long, chat)
                 else:
-                    self.db.add_quote(new_text)
+                    try:
+                        self.db.add_quote(new_text)
+                    except Exception:
+                        self.send_message(Messages.add_failure, chat)
+                        return
                     self.send_message(Messages.added, chat)
                     self.db.update_last_quote(chat, new_text)
 
@@ -117,7 +128,8 @@ class MotiBot:
                     message += val
                     message += "\n"
                 if message.__len__() > 0:
-                    self.send_message(message, chat)
+                    chunks, chunk_size = len(message), 4096  # Telegram message length limit
+                    [self.send_message(message[i:i+chunk_size], chat) for i in range(0, chunks, chunk_size)]
                 else:
                     self.send_message(Messages.empty, chat)
 
