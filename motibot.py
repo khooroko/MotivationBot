@@ -48,15 +48,13 @@ class MotiBot:
 
     def set_scheduler(self, chat, time_to_send):
         self.db.set_time_to_send(chat, time_to_send)
-        schedule.clear(chat)
+        self.remove_scheduler(chat)
         schedule.every().day.at(TimeUtil.convert_string_to_time(time_to_send)).do(self.send_random_quote, chat)\
             .tag(chat)
 
     def reset_all_schedulers(self):
         for x in self.db.get_users_and_time():
-            self.remove_scheduler(str(x[0]))
-            schedule.every().day.at(TimeUtil.convert_string_to_time(str(x[1]))).do(self.send_random_quote, str(x[0])) \
-                .tag(str(x[0]))
+            self.set_scheduler(str(x[0]), str(x[1]))
 
     def handle_updates(self, updates):
         for update in updates["result"]:
@@ -186,14 +184,11 @@ def main():
     last_update_id = None
     while True:
         schedule.run_pending()
-        try:
-            updates = bot.get_updates(last_update_id)
-            if len(updates["result"]) > 0:
-                last_update_id = bot.get_last_update_id(updates) + 1
-                bot.handle_updates(updates)
-            time.sleep(0.4)
-        except Exception:
-            continue
+        updates = bot.get_updates(last_update_id)
+        if len(updates["result"]) > 0:
+            last_update_id = bot.get_last_update_id(updates) + 1
+            bot.handle_updates(updates)
+        time.sleep(0.4)
 
 
 if __name__ == '__main__':

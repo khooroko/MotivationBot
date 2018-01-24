@@ -61,17 +61,17 @@ class DBHelper:
         return [(x[0], x[1]) for x in self.conn.fetchall()]
 
     def get_last_quote(self, owner):
-        stmt = "SELECT last_quote FROM owners WHERE owner = CAST ('%s' as text)"
+        stmt = "SELECT last_quote FROM owners WHERE owner = CAST (%s as text)"
         args = (owner,)
         self.conn.execute(stmt, args)
         return self.conn.fetchone()[0]
 
     def update_last_quote(self, owner, quote_text):
-        stmt = "UPDATE owners SET last_quote = (%s) WHERE owner = CAST ('%s' as text)"
+        stmt = "UPDATE owners SET last_quote = (%s) WHERE owner = CAST (%s as text)"
         args = (quote_text, owner)
         self.conn.execute(stmt, args)
 
     def set_time_to_send(self, owner, time):
-        stmt = "UPDATE owners SET time = (%s) WHERE owner = CAST ('%s' as text)"
+        stmt = "UPDATE owners SET time = (%s) WHERE owner = CAST (%s as text)"
         args = (time, owner)
         self.conn.execute(stmt, args)
